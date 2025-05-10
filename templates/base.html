@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- SEO Meta Etiketleri -->
+    <title>{% if meta.title %}{{ meta.title }}{% else %}Xalvion - Tıp Fakültesi Öğrencileri için AI Asistan{% endif %}
+    </title>
+    <meta name="description"
+        content="{% if meta.description %}{{ meta.description }}{% else %}Tıp fakültesi öğrencileri için yapay zeka destekli asistan. Tıbbi bilgileri hızlı ve doğru şekilde öğrenin.{% endif %}">
+    <meta name="keywords"
+        content="{% if meta.keywords %}{{ meta.keywords }}{% else %}tıp, tıp fakültesi, tıp öğrencisi, yapay zeka, AI asistan{% endif %}">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{% if meta.canonical %}{{ meta.canonical }}{% else %}{{ request.url }}{% endif %}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="{% if meta.og_type %}{{ meta.og_type }}{% else %}website{% endif %}">
+    <meta property="og:url" content="{% if meta.og_url %}{{ meta.og_url }}{% else %}{{ request.url }}{% endif %}">
+    <meta property="og:title"
+        content="{% if meta.og_title %}{{ meta.og_title }}{% else %}Xalvion - Tıp Fakültesi Öğrencileri için AI Asistan{% endif %}">
+    <meta property="og:description"
+        content="{% if meta.og_description %}{{ meta.og_description }}{% else %}Tıp fakültesi öğrencileri için yapay zeka destekli asistan. Tıbbi bilgileri hızlı ve doğru şekilde öğrenin.{% endif %}">
+    <meta property="og:image" content="{{ url_for('static', filename='img/og-image.jpg') }}">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url"
+        content="{% if meta.twitter_url %}{{ meta.twitter_url }}{% else %}{{ request.url }}{% endif %}">
+    <meta property="twitter:title"
+        content="{% if meta.twitter_title %}{{ meta.twitter_title }}{% else %}Xalvion - Tıp Fakültesi Öğrencileri için AI Asistan{% endif %}">
+    <meta property="twitter:description"
+        content="{% if meta.twitter_description %}{{ meta.twitter_description }}{% else %}Tıp fakültesi öğrencileri için yapay zeka destekli asistan. Tıbbi bilgileri hızlı ve doğru şekilde öğrenin.{% endif %}">
+    <meta property="twitter:image" content="{{ url_for('static', filename='img/twitter-image.jpg') }}">
+
+    <!-- Güvenlik Başlıkları -->
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data:; font-src 'self' https://cdn.jsdelivr.net; connect-src 'self'">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- Favicon -->
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token }}">
+
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+    <!-- Erişilebilirlik için atla bağlantısı -->
+    <a href="#main-content" class="skip-link">İçeriğe atla</a>
+
+    <header>
+        <nav>
+            <div class="container">
+                <a href="{{ url_for('index') }}" class="logo">
+                    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Xalvion Logo">
+                </a>
+
+                <ul class="nav-links">
+                    <li><a href="{{ url_for('index') }}">Ana Sayfa</a></li>
+                    {% if 'user_id' in session %}
+                    <li><a href="{{ url_for('chat') }}">Sohbet</a></li>
+                    <li><a href="{{ url_for('logout') }}">Çıkış</a></li>
+                    {% else %}
+                    <li><a href="{{ url_for('login') }}">Giriş</a></li>
+                    <li><a href="{{ url_for('register') }}">Kayıt</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <!-- Flash mesajları -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; {{ now.year }} Xalvion. Tüm hakları saklıdır.</p>
+            <ul class="footer-links">
+                <li><a href="#">Gizlilik Politikası</a></li>
+                <li><a href="#">Kullanım Şartları</a></li>
+                <li><a href="#">İletişim</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    <!-- CSRF Token JavaScript -->
+    <script>
+        // CSRF token'ı tüm AJAX isteklerine ekle
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        // AJAX istekleri için CSRF token'ı ekle
+        document.addEventListener('DOMContentLoaded', function () {
+            // Tüm form elemanlarına CSRF token ekle
+            document.querySelectorAll('form').forEach(form => {
+                // Eğer form zaten bir CSRF token içermiyorsa ekle
+                if (!form.querySelector('input[name="_csrf_token"]')) {
+                    const csrfInput = document.createElement('input');
+                    csrfInput.type = 'hidden';
+                    csrfInput.name = '_csrf_token';
+                    csrfInput.value = csrfToken;
+                    form.appendChild(csrfInput);
+                }
+            });
+
+            // AJAX istekleri için
+            const originalFetch = window.fetch;
+            window.fetch = function (url, options) {
+                options = options || {};
+                options.headers = options.headers || {};
+
+                // POST, PUT, DELETE isteklerine CSRF token ekle
+                if (options.method && ['POST', 'PUT', 'DELETE'].includes(options.method.toUpperCase())) {
+                    options.headers['X-CSRF-Token'] = csrfToken;
+                }
+
+                return originalFetch(url, options);
+            };
+        });
+    </script>
+
+    <!-- XSS Koruması -->
+    <script>
+        // HTML içeriğini güvenli şekilde eklemek için yardımcı fonksiyon
+        function safeHTML(html) {
+            const div = document.createElement('div');
+            div.textContent = html;
+            return div.innerHTML;
+        }
+    </script>
+
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

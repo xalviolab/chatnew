@@ -1,0 +1,30 @@
+<svg width="500" height="400" viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Arka plan daire -->
+  <circle cx="250" cy="200" r="150" fill="#2196f3" opacity="0.1"/>
+  
+  <!-- Beyin simgesi -->
+  <path d="M320,180 C320,153.49 298.51,132 272,132 C265.09,132 258.5,133.43 252.47,136 C247.12,121.93 233.41,112 217.5,112 C196.79,112 180,128.79 180,149.5 C180,152.25 180.32,154.93 180.92,157.5 C168.57,164.26 160,177.48 160,192.5 C160,214.87 178.13,233 200.5,233 L300,233 C311.05,233 320,224.05 320,213 C320,204.58 315.19,197.22 308,193.67 C315.19,190.12 320,182.76 320,174.33 L320,180 Z" fill="#2196f3"/>
+  
+  <!-- Beyin bağlantıları -->
+  <path d="M220,160 L280,190" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+  <path d="M230,180 L290,210" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+  <path d="M210,190 L270,220" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Tıp sembolü (Yılan ve Asa) -->
+  <path d="M230,260 L230,300" stroke="#1a1a1a" stroke-width="4" stroke-linecap="round"/>
+  <path d="M210,270 C210,270 220,260 230,270 C240,280 250,270 250,270" stroke="#1a1a1a" stroke-width="3" fill="none"/>
+  <path d="M210,280 C210,280 220,270 230,280 C240,290 250,280 250,280" stroke="#1a1a1a" stroke-width="3" fill="none"/>
+  
+  <!-- Metin balonu -->
+  <rect x="280" y="150" width="120" height="80" rx="15" ry="15" fill="#ffffff" stroke="#1a1a1a" stroke-width="2"/>
+  <path d="M280,190 L260,210 L280,200" fill="#ffffff" stroke="#1a1a1a" stroke-width="2"/>
+  
+  <!-- Metin balonu içindeki yazı -->
+  <text x="340" y="180" font-family="Arial" font-size="12" text-anchor="middle" fill="#1a1a1a">Xalvion</text>
+  <text x="340" y="200" font-family="Arial" font-size="10" text-anchor="middle" fill="#1a1a1a">Tıp AI Asistanı</text>
+  
+  <!-- Kitaplar -->
+  <rect x="160" y="240" width="40" height="50" fill="#4caf50" stroke="#1a1a1a" stroke-width="1"/>
+  <rect x="165" y="235" width="40" height="50" fill="#f44336" stroke="#1a1a1a" stroke-width="1"/>
+  <rect x="170" y="230" width="40" height="50" fill="#ff9800" stroke="#1a1a1a" stroke-width="1"/>
+</svg>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xalvion - PDF Yükleme</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="admin-panel">
+    <header>
+        <div class="container header-container">
+            <a href="{{ url_for('index') }}" class="logo">X<span>alvion</span></a>
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <nav>
+                <ul id="menu">
+                    <li><a href="{{ url_for('index') }}">Ana Sayfa</a></li>
+                    <li><a href="{{ url_for('chat') }}">Chat</a></li>
+                    <li><a href="{{ url_for('pricing') }}">Fiyatlandırma</a></li>
+                    <li><a href="{{ url_for('admin') }}" class="active">Admin</a></li>
+                    <li><a href="{{ url_for('logout') }}">Çıkış</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="admin-container">
+                <div class="admin-sidebar">
+                    <h3>Admin Menüsü</h3>
+                    <ul>
+                        <li><a href="{{ url_for('admin') }}">Genel Bakış</a></li>
+                        <li><a href="{{ url_for('admin_users') }}">Kullanıcılar</a></li>
+                        <li><a href="{{ url_for('admin_upload') }}" class="active">PDF Yükleme</a></li>
+                    </ul>
+                </div>
+                <div class="admin-content">
+                    <h2>PDF Yükleme ve RAG Sistemi</h2>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+
+                    <div class="upload-section">
+                        <h3>Yeni PDF Yükle</h3>
+                        <p>Yüklenen PDF'ler yapılandırılmış RAG sistemi tarafından işlenerek başlık ve bölüm bazlı
+                            olarak tıbbi bilgi veritabanına eklenecektir. Bu yaklaşım:</p>
+                        <ul>
+                            <li>Bilgi bütünlüğünü korur</li>
+                            <li>Token kullanımını minimize eder</li>
+                            <li>Arama performansını artırır</li>
+                            <li>Daha doğru ve kapsamlı yanıtlar sağlar</li>
+                        </ul>
+                        <form action="{{ url_for('admin_upload') }}" method="post" enctype="multipart/form-data"
+                            class="upload-form">
+                            <div class="form-group">
+                                <label for="file">PDF Dosyası Seçin</label>
+                                <input type="file" id="file" name="file" accept=".pdf" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Yükle ve İşle</button>
+                        </form>
+                    </div>
+
+                    <div class="documents-section">
+                        <h3>Yüklenen Dokümanlar</h3>
+                        {% if documents %}
+                        <div class="admin-table-container">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Dosya Adı</th>
+                                        <th>Yükleyen</th>
+                                        <th>Yükleme Tarihi</th>
+                                        <th>İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for doc in documents %}
+                                    <tr>
+                                        <td>{{ doc.id }}</td>
+                                        <td>{{ doc.filename }}</td>
+                                        <td>{{ doc.uploaded_by }}</td>
+                                        <td>{{ doc.created_at }}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-danger delete-document"
+                                                data-id="{{ doc.id }}">Sil</button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <p>Henüz yüklenmiş doküman bulunmamaktadır.</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Doküman Silme Modal -->
+                    <div id="deleteDocumentModal" class="modal">
+                        <div class="modal-content">
+                            <span class="close">&times;</span>
+                            <h3>Doküman Sil</h3>
+                            <p>Bu dokümanı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz ve RAG sisteminden
+                                de kaldırılacaktır.</p>
+                            <form id="deleteDocumentForm" action="" method="post">
+                                <button type="submit" class="btn btn-danger">Sil</button>
+                                <button type="button" class="btn btn-secondary cancel-delete">İptal</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <a href="{{ url_for('index') }}" class="logo">X<span>alvion</span></a>
+                    <p>Tıp Fakültesi Öğrencileri için AI Asistan</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-links-column">
+                        <h4>Sayfalar</h4>
+                        <ul>
+                            <li><a href="{{ url_for('index') }}">Ana Sayfa</a></li>
+                            <li><a href="{{ url_for('chat') }}">Chat</a></li>
+                            <li><a href="{{ url_for('pricing') }}">Fiyatlandırma</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-links-column">
+                        <h4>Admin</h4>
+                        <ul>
+                            <li><a href="{{ url_for('admin') }}">Genel Bakış</a></li>
+                            <li><a href="{{ url_for('admin_users') }}">Kullanıcılar</a></li>
+                            <li><a href="{{ url_for('admin_upload') }}">PDF Yükleme</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-links-column">
+                        <h4>İletişim</h4>
+                        <ul>
+                            <li><a href="mailto:info@xalvion.com">info@xalvion.com</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; {{ now.year }} Xalvion. Tüm hakları saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+
+</html>

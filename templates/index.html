@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xalvion - Tıp Fakültesi Öğrencileri için AI Asistan</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <header>
+        <div class="container header-container">
+            <a href="{{ url_for('index') }}" class="logo">X<span>alvion</span></a>
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <nav>
+                <ul id="menu">
+                    <li><a href="{{ url_for('index') }}" class="active">Ana Sayfa</a></li>
+                    <li><a href="{{ url_for('chat') }}">Chat</a></li>
+                    <li><a href="{{ url_for('pricing') }}">Fiyatlandırma</a></li>
+                    {% if session.role == 'admin' %}
+                    <li><a href="{{ url_for('admin') }}">Admin</a></li>
+                    {% endif %}
+                    {% if session.user_id %}
+                    <li><a href="{{ url_for('logout') }}">Çıkış</a></li>
+                    {% else %}
+                    <li><a href="{{ url_for('login') }}">Giriş</a></li>
+                    <li><a href="{{ url_for('register') }}">Kayıt</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Tıp Eğitiminizde Yapay Zeka Desteği</h1>
+                    <p>Xalvion, tıp fakültesi öğrencileri için geliştirilmiş, Türkçe tıbbi bilgi ve kaynaklara erişim
+                        sağlayan
+                        yapay zeka asistanıdır.</p>
+                    {% if not session.user_id %}
+                    <div class="hero-buttons">
+                        <a href="{{ url_for('register') }}" class="btn btn-primary">Hemen Başla</a>
+                        <a href="{{ url_for('login') }}" class="btn btn-secondary">Giriş Yap</a>
+                    </div>
+                    {% else %}
+                    <div class="hero-buttons">
+                        <a href="{{ url_for('chat') }}" class="btn btn-primary">Sohbete Başla</a>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="hero-image">
+                    <img src="{{ url_for('static', filename='img/hero-image.svg') }}" alt="Xalvion AI Asistan">
+                </div>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="container">
+                <h2 class="section-title">Özellikler</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📚</div>
+                        <h3>Tıbbi Bilgi Erişimi</h3>
+                        <p>Güncel tıbbi literatüre ve bilgilere anında erişim sağlayın.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔍</div>
+                        <h3>RAG Teknolojisi</h3>
+                        <p>Retrieval-Augmented Generation ile doğru ve güncel bilgilere ulaşın.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🧠</div>
+                        <h3>Gelişmiş AI Modelleri</h3>
+                        <p>Llama 4 gibi en son AI modellerini kullanarak doğru yanıtlar alın.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🇹🇷</div>
+                        <h3>Türkçe Destek</h3>
+                        <p>Tamamen Türkçe içerik ve arayüz ile kolay kullanım.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="how-it-works">
+            <div class="container">
+                <h2 class="section-title">Nasıl Çalışır?</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3>Hesap Oluştur</h3>
+                        <p>Ücretsiz hesabınızı oluşturun ve hemen kullanmaya başlayın.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3>Sorunuzu Sorun</h3>
+                        <p>Tıbbi konulardaki sorularınızı Xalvion'a sorun.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3>Yanıtları Alın</h3>
+                        <p>Güncel tıbbi bilgilerle desteklenmiş yanıtları anında alın.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="pricing-preview">
+            <div class="container">
+                <h2 class="section-title">Fiyatlandırma</h2>
+                <p class="section-description">İhtiyaçlarınıza uygun planı seçin</p>
+                <div class="pricing-cards">
+                    <div class="pricing-card">
+                        <h3>Ücretsiz</h3>
+                        <div class="price">0 ₺</div>
+                        <ul class="pricing-features">
+                            <li>Günlük 2,000 token</li>
+                            <li>Haftalık 1 RAG sorgusu</li>
+                            <li>Temel AI modelleri</li>
+                        </ul>
+                        <a href="{{ url_for('register') }}" class="btn btn-secondary">Kaydol</a>
+                    </div>
+                    <div class="pricing-card featured">
+                        <div class="featured-tag">Popüler</div>
+                        <h3>Premium</h3>
+                        <div class="price">99 ₺<span>/ay</span></div>
+                        <ul class="pricing-features">
+                            <li>Günlük 15,000 token</li>
+                            <li>Haftalık 10 RAG sorgusu</li>
+                            <li>Tüm AI modelleri</li>
+                            <li>Öncelikli destek</li>
+                        </ul>
+                        <a href="{{ url_for('pricing') }}" class="btn btn-primary">Satın Al</a>
+                    </div>
+                    <div class="pricing-card">
+                        <h3>Kurumsal</h3>
+                        <div class="price">İletişime Geçin</div>
+                        <ul class="pricing-features">
+                            <li>Sınırsız token</li>
+                            <li>Sınırsız RAG sorgusu</li>
+                            <li>Tüm AI modelleri</li>
+                            <li>Özel entegrasyon</li>
+                            <li>7/24 destek</li>
+                        </ul>
+                        <a href="mailto:info@xalvion.com" class="btn btn-secondary">İletişim</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <a href="{{ url_for('index') }}" class="logo">X<span>alvion</span></a>
+                    <p>Tıp Fakültesi Öğrencileri için AI Asistan</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-links-column">
+                        <h4>Sayfalar</h4>
+                        <ul>
+                            <li><a href="{{ url_for('index') }}">Ana Sayfa</a></li>
+                            <li><a href="{{ url_for('chat') }}">Chat</a></li>
+                            <li><a href="{{ url_for('pricing') }}">Fiyatlandırma</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-links-column">
+                        <h4>Hesap</h4>
+                        <ul>
+                            <li><a href="{{ url_for('login') }}">Giriş</a></li>
+                            <li><a href="{{ url_for('register') }}">Kayıt</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-links-column">
+                        <h4>İletişim</h4>
+                        <ul>
+                            <li><a href="mailto:info@xalvion.com">info@xalvion.com</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; {{ now.year }} Xalvion. Tüm hakları saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+</body>
+
+</html>

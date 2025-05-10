@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xalvion - Chat</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ai-status.css') }}">
+</head>
+
+<body>
+    <header>
+        <div class="container header-container">
+            <a href="{{ url_for('index') }}" class="logo">X<span>alvion</span></a>
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <nav>
+                <ul id="menu">
+                    <li><a href="{{ url_for('index') }}">Ana Sayfa</a></li>
+                    <li><a href="{{ url_for('chat') }}" class="active">Chat</a></li>
+                    <li><a href="{{ url_for('pricing') }}">Fiyatlandırma</a></li>
+                    {% if session.role == 'admin' %}
+                    <li><a href="{{ url_for('admin') }}">Admin</a></li>
+                    {% endif %}
+                    {% if session.user_id %}
+                    <li><a href="{{ url_for('logout') }}">Çıkış</a></li>
+                    {% else %}
+                    <li><a href="{{ url_for('login') }}">Giriş</a></li>
+                    <li><a href="{{ url_for('register') }}">Kayıt</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="user-limits">
+                <div class="limit-item">
+                    <span class="limit-label">Token Limiti:</span>
+                    <span class="limit-value" id="tokenLimit">{{ user.token_limit }}</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="tokenProgress"
+                        style="width: {{ (user.tokens_used / user.token_limit) * 100 }}%"></div>
+                </div>
+                <div class="limit-item">
+                    <span class="limit-label">Kalan Token:</span>
+                    <span class="limit-value" id="tokenRemaining">{{ user.token_limit - user.tokens_used }}</span>
+                </div>
+                <div class="limit-item">
+                    <span class="limit-label">RAG Sorgu Limiti:</span>
+                    <span class="limit-value" id="ragLimit">{{ user.rag_limit }}</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="ragProgress"
+                        style="width: {{ (user.rag_used / user.rag_limit) * 100 }}%"></div>
+                </div>
+                <div class="limit-item">
+                    <span class="limit-label">Kalan RAG Sorgusu:</span>
+                    <span class="limit-value" id="ragRemaining">{{ user.rag_limit - user.rag_used }}</span>
+                </div>
+                <div class="limit-item">
+                    <span class="limit-label">Hesap Türü:</span>
+                    <span class="limit-value">{{ user.role|capitalize }}</span>
+                    {% if user.role == 'basic' %}
+                    <a href="{{ url_for('pricing') }}" class="btn btn-primary btn-sm">Yükselt</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-main">
+                    <div class="chat-header">
+                        <h2>Xalvion AI Asistan</h2>
+                        <div class="chat-options">
+                            <div class="chat-option">
+                                <select id="modelSelect" class="model-select">
+                                    {% for model in models %}
+                                    <option value="{{ model.id }}" {% if model.required_role=='premium' and user.role
+                                        not in ['premium', 'admin' ] %}disabled{% endif %} {% if
+                                        model.id=='compound-beta-mini' %}selected{% endif %}>
+                                        {{ model.name }}
+                                        {% if model.required_role == 'premium' and user.role not in ['premium', 'admin']
+                                        %}🔒{% endif %}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="chat-option">
+                                <input type="checkbox" id="useRag" name="useRag">
+                                <label for="useRag">RAG Kullan</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message message-assistant">
+                            <p>Merhaba, ben Xalvion! Size nasıl yardımcı olabilirim?</p>
+                            <div class="message-time">Şimdi</div>
+                        </div>
+                    </div>
+                    <div class="chat-form">
+                        <textarea id="messageInput" class="chat-input" placeholder="Mesajınızı yazın..."
+                            rows="3"></textarea>
+                        <button id="sendButton" class="btn btn-primary chat-submit">Gönder</button>
+                    </div>
+                    <div class="chat-disclaimer">
+                        Xalvion hata yapabilir. Lütfen bir hata görürseniz bildirin.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Xalvion. Tüm hakları saklıdır.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+</body>
+
+</html>

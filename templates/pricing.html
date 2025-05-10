@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xalvion - Fiyatlandırma</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <header>
+        <div class="container header-container">
+            <a href="{{ url_for('index') }}" class="logo">X<span>alvion</span></a>
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <nav>
+                <ul id="menu">
+                    <li><a href="{{ url_for('index') }}">Ana Sayfa</a></li>
+                    <li><a href="{{ url_for('chat') }}">Chat</a></li>
+                    <li><a href="{{ url_for('pricing') }}" class="active">Fiyatlandırma</a></li>
+                    {% if session.role == 'admin' %}
+                    <li><a href="{{ url_for('admin') }}">Admin</a></li>
+                    {% endif %}
+                    {% if session.user_id %}
+                    <li><a href="{{ url_for('logout') }}">Çıkış</a></li>
+                    {% else %}
+                    <li><a href="{{ url_for('login') }}">Giriş</a></li>
+                    <li><a href="{{ url_for('register') }}">Kayıt</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="pricing-section">
+            <div class="container">
+                <h1 class="section-title">Fiyatlandırma Planları</h1>
+                <p class="section-description">İhtiyaçlarınıza en uygun planı seçin</p>
+
+                <div class="pricing-cards">
+                    <div class="pricing-card">
+                        <h3>Ücretsiz</h3>
+                        <div class="price">0 ₺</div>
+                        <div class="price-period">Süresiz</div>
+                        <ul class="pricing-features">
+                            <li>Günlük 2,000 token</li>
+                            <li>Haftalık 1 RAG sorgusu</li>
+                            <li>Temel AI modelleri</li>
+                            <li>E-posta desteği</li>
+                        </ul>
+                        {% if not session.user_id %}
+                        <a href="{{ url_for('register') }}" class="btn btn-secondary">Kaydol</a>
+                        {% elif session.role == 'basic' %}
+                        <span class="current-plan">Mevcut Planınız</span>
+                        {% else %}
+                        <a href="#" class="btn btn-secondary disabled">Kaydol</a>
+                        {% endif %}
+                    </div>
+
+                    <div class="pricing-card featured">
+                        <div class="featured-tag">Popüler</div>
+                        <h3>Premium</h3>
+                        <div class="price">99 ₺<span>/ay</span></div>
+                        <ul class="pricing-features">
+                            <li>Günlük 15,000 token</li>
+                            <li>Haftalık 10 RAG sorgusu</li>
+                            <li>Tüm AI modelleri</li>
+                            <li>Öncelikli destek</li>
+                            <li>Gelişmiş özellikler</li>
+                        </ul>
+                        {% if not session.user_id %}
+                        <a href="{{ url_for('register') }}" class="btn btn-primary">Kaydol & Satın Al</a>
+                        {% elif session.role == 'premium' %}
+                        <span class="current-plan">Mevcut Planınız</span>
+                        {% elif session.role == 'basic' %}
+                        <a href="#" class="btn btn-primary" id="upgradePremium">Yükselt</a>
+                        {% else %}
+                        <a href="#" class="btn btn-primary disabled">Satın Al</a>
+                        {% endif %}
+                    </div>
+
+                    <div class="pricing-card">
+                        <h3>Kurumsal</h3>
+                        <div class="price">İletişime Geçin</div>
+                        <ul class="pricing-features">
+                            <li>Sınırsız token</li>
+                            <li>Sınırsız RAG sorgusu</li>
+                            <li>Tüm AI modelleri</li>
+                            <li>Özel entegrasyon</li>
+                            <li>7/24 destek</li>
+                            <li>Özel eğitim</li>
+                            <li>Özelleştirilmiş çözümler</li>
+                        </ul>
+                        <a href="mailto:info@xalvion.com" class="btn btn-secondary">İletişim</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="faq-section">
+            <div class="container">
+                <h2 class="section-title">Sıkça Sorulan Sorular</h2>
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <div class="faq-question">Token nedir?</div>
+                        <div class="faq-answer">
+                            <p>Tokenlar, AI modellerinin metin işleme birimlerini temsil eder. Bir token yaklaşık olarak
+                                4 karaktere denk gelir. Örneğin, 2,000 token yaklaşık 1,500 kelimelik bir metne karşılık
+                                gelebilir.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">RAG teknolojisi nedir?</div>
+                        <div class="faq-answer">
+                            <p>RAG (Retrieval-Augmented Generation), AI modelinin yanıtlarını oluştururken dış
+                                kaynaklardan bilgi almasını sağlayan bir teknolojidir. Bu sayede daha doğru ve güncel
+                                bilgiler sunulabilir.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Aboneliğimi nasıl iptal edebilirim?</div>
+                        <div class="faq-answer">
+                            <p>Premium aboneliğinizi hesap ayarlarınızdan istediğiniz zaman iptal edebilirsiniz. İptal
+                                işlemi, mevcut fatura döneminin sonunda geçerli olacaktır.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Ödeme yöntemleri nelerdir?</div>
+                        <div class="faq-answer">
+                            <p>Kredi kartı, banka kartı ve havale/EFT ile ödeme yapabilirsiniz. Kurumsal planlar için
+                                fatura kesebiliyoruz.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">Ücretsiz plandan Premium'a geçebilir miyim?</div>
+                        <div class="faq-answer">
+                            <p>Evet, istediğiniz zaman ücretsiz plandan Premium plana yükseltme yapabilirsiniz.
+                                Yükseltme işlemi anında gerçekleşir.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <div class="container">
+                <div class="cta-content">
+                    <h2>Hemen Başlayın</h2>
+                    <p>Tıp eğitiminizde yapay zeka desteği ile bir adım öne geçin.</p>
+                    {% if not session.user_id %}
+                    <div class="cta-buttons">
+                        <a href="{{ url_for('register') }}" class="btn btn-primary">Ücretsiz Kaydol</a>
+                        <a href="{{ url_for('login') }}" class="btn btn-secondary">Giriş Yap</a>
+                    </div>
+                    {% else %}
+                    <div class="cta-buttons">
+                        <a href="{{ url_for('chat') }}" class="btn btn-primary">Sohbete Başla</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <a href="{{ url_for('index') }}" class="logo">X<span>alvion</span></a>
+                    <p>Tıp Fakültesi Öğrencileri için AI Asistan</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-links-column">
+                        <h4>Sayfalar</h4>
+                        <ul>
+                            <li><a href="{{ url_for('index') }}">Ana Sayfa</a></li>
+                            <li><a href="{{ url_for('chat') }}">Chat</a></li>
+                            <li><a href="{{ url_for('pricing') }}">Fiyatlandırma</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-links-column">
+                        <h4>Hesap</h4>
+                        <ul>
+                            <li><a href="{{ url_for('login') }}">Giriş</a></li>
+                            <li><a href="{{ url_for('register') }}">Kayıt</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-links-column">
+                        <h4>İletişim</h4>
+                        <ul>
+                            <li><a href="mailto:info@xalvion.com">info@xalvion.com</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; {{ now.year }} Xalvion. Tüm hakları saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+</body>
+
+</html>
